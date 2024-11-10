@@ -1,0 +1,67 @@
+
+installer toujours l'openvpn client non serveur ( sudo apt install openvpn )
+
+cd /etc/openvpn/ 
+
+"Copie des fichiers depuis l'adresse IP 31.207.33.179"
+
+scp 31.207.33.179:/root/caisse_synje* 
+
+ll 
+
+# Configurer le service VPN
+
+ "Configuration du service VPN..."
+
+nano /lib/systemd/system/vpn_caisse_synjet.service
+
+NB: le " " n'est pas à copier !! ça commence  [Unit] et termine =multi-user.target dans nano
+
+" [Unit]
+Description=Mode.me OpenVPN US-East
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/sbin/openvpn --config /etc/openvpn/caisse_synjet.ovpn
+
+[Install]
+WantedBy=multi-user.target "
+
+# Recharger les fichiers de configuration du système
+ "Rechargement des fichiers de configuration du système..."
+
+systemctl daemon-reload
+
+# Activer le service VPN
+
+ "Activation du service VPN..."
+
+systemctl enable vpn_caisse_synjet.service
+
+# Démarrer le service VPN
+
+ "Démarrage du service VPN..."
+n'oubliez pas ce deux lignes de commande dans le code
+
+route-nopull
+route google.com 255.255.255.255
+
+
+ nano /etc/openvpn/vpn_caisse_synjet.ovpn
+
+route-nopull
+route google.com 255.255.255.255
+
+
+ "Démarrage du service VPN..."
+
+service vpn_caisse_synjet start
+
+
+# Vérifier la configuration du VPN
+
+ "Vérification des adresses IP après démarrage du VPN..."
+ip a
+
+"Configuration du VPN terminée."
